@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suivi production orale 8e – Voyage en Colombie</title>
+    
+    <!-- Tailwind CSS pour le style rapide et responsive -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- html2canvas pour la fonctionnalité de capture d'écran -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f0f9ff;
+        }
+
+        /* Styles spécifiques pour les onglets */
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 4px solid transparent;
+        }
+        .tab-btn.active {
+            color: #0369a1; /* Sky 700 */
+            border-bottom-color: #0369a1;
+            background-color: #e0f2fe; /* Sky 100 */
+        }
+
+        /* Style pour la zone vidéo */
+        #videoElement {
+            transform: scaleX(-1); /* Effet miroir pour que ce soit naturel pour l'élève */
+            background-color: #000;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- En-tête -->
+    <header class="bg-gradient-to-r from-yellow-400 via-blue-500 to-red-500 shadow-lg text-white py-6">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold drop-shadow-md">
+                <i class="fas fa-plane-departure mr-2"></i> Suivi production orale 8e
+            </h1>
+            <p class="text-xl mt-2 font-semibold text-white drop-shadow-sm">
+                « Voyage en Colombie : Célébrations et Saveurs »
+            </p>
+        </div>
+    </header>
+
+    <!-- Navigation Onglets -->
+    <nav class="container mx-auto px-4 mt-6 max-w-5xl">
+        <div class="flex flex-col sm:flex-row shadow-md rounded-lg overflow-hidden bg-white">
+            <button onclick="switchTab('prep')" id="btn-prep" class="tab-btn active flex-1 py-4 text-lg font-bold text-gray-500 hover:bg-gray-50 focus:outline-none">
+                <i class="fas fa-pencil-alt mr-2"></i> 1. Préparation
+            </button>
+            <button onclick="switchTab('record')" id="btn-record" class="tab-btn flex-1 py-4 text-lg font-bold text-gray-500 hover:bg-gray-50 focus:outline-none">
+                <i class="fas fa-video mr-2"></i> 2. Enregistrement & Récapitulatif
+            </button>
+        </div>
+    </nav>
+
+    <!-- Contenu Principal -->
+    <main class="container mx-auto px-4 mt-6 mb-12 max-w-5xl">
+
+        <!-- ======================= ONGLET 1 : PRÉPARATION ======================= -->
+        <section id="tab-prep" class="animate-fade-in">
+            
+            <!-- Consigne Générale -->
+            <div class="bg-white rounded-xl shadow-md border-l-8 border-blue-500 p-6 mb-8">
+                <h2 class="text-2xl font-bold text-blue-700 mb-4 flex items-center">
+                    <i class="fas fa-info-circle mr-2"></i> Consigne générale
+                </h2>
+                <div class="prose max-w-none text-gray-700">
+                    <p class="mb-2">Vous allez faire une <strong>vidéo d’environ 3 minutes</strong> dans laquelle vous présenterez une fête traditionnelle célébrée en Colombie.</p>
+                    <p class="mb-4">Dans cette vidéo, vous devrez parler :</p>
+                    <ul class="list-disc list-inside mb-4 ml-4 space-y-1">
+                        <li>du <strong>nom</strong> de la fête</li>
+                        <li>du <strong>lieu</strong> où elle se déroule</li>
+                        <li>des <strong>activités principales</strong></li>
+                        <li>de la <strong>nourriture typique</strong></li>
+                        <li>des <strong>aspects culturels</strong> associés</li>
+                    </ul>
+                    <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                        <h3 class="font-bold text-yellow-800 mb-2"><i class="fas fa-spell-check mr-2"></i>N'oubliez pas d'utiliser :</h3>
+                        <ul class="list-disc list-inside text-sm text-yellow-900 grid grid-cols-1 md:grid-cols-2 gap-2">
+                            <li>Les pronoms : <strong>y, en, on, où</strong></li>
+                            <li>Les <strong>comparatifs</strong></li>
+                            <li>Les verbes : <strong>sentir, servir, boire</strong></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulaire de Questions -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-6 border-b pb-2">Je prépare mon texte</h3>
+                
+                <form id="prepForm" class="space-y-6">
+                    <!-- Q1 -->
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="md:col-span-1 bg-blue-50 p-4 rounded-lg">
+                            <label class="font-bold text-blue-800 block mb-1">Nom de la fête</label>
+                            <p class="text-sm text-blue-600">Comment s'appelle-t-elle ? En quoi consiste-t-elle ?</p>
+                        </div>
+                        <div class="md:col-span-2">
+                            <textarea id="q-nom" class="w-full h-24 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent" placeholder="Ex: La fête s'appelle... C'est une célébration qui..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Q2 -->
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="md:col-span-1 bg-green-50 p-4 rounded-lg">
+                            <label class="font-bold text-green-800 block mb-1">Lieu de la fête</label>
+                            <p class="text-sm text-green-600">Où se déroule-t-elle ? (Ville, région)</p>
+                        </div>
+                        <div class="md:col-span-2">
+                            <textarea id="q-lieu" class="w-full h-24 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-400 focus:border-transparent" placeholder="Ex: Cette fête a lieu à... On la célèbre dans la région de..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Q3 -->
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="md:col-span-1 bg-purple-50 p-4 rounded-lg">
+                            <label class="font-bold text-purple-800 block mb-1">Date ou période</label>
+                            <p class="text-sm text-purple-600">Quand a-t-elle lieu ?</p>
+                        </div>
+                        <div class="md:col-span-2">
+                            <textarea id="q-date" class="w-full h-24 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent" placeholder="Ex: Elle se déroule en août... C'est pendant la période de..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Q4 -->
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="md:col-span-1 bg-orange-50 p-4 rounded-lg">
+                            <label class="font-bold text-orange-800 block mb-1">Activités principales</label>
+                            <p class="text-sm text-orange-600">Défilés, danses, concerts... Que font les gens ?</p>
+                        </div>
+                        <div class="md:col-span-2">
+                            <textarea id="q-activites" class="w-full h-24 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 focus:border-transparent" placeholder="Ex: On y danse la salsa... Il y a des défilés où..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Q5 -->
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="md:col-span-1 bg-red-50 p-4 rounded-lg">
+                            <label class="font-bold text-red-800 block mb-1">Nourriture typique</label>
+                            <p class="text-sm text-red-600">Plats traditionnels ? Produits locaux ?</p>
+                        </div>
+                        <div class="md:col-span-2">
+                            <textarea id="q-nourriture" class="w-full h-24 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-400 focus:border-transparent" placeholder="Ex: On sert des arepas... On boit du café... C'est meilleur que..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Q6 -->
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="md:col-span-1 bg-teal-50 p-4 rounded-lg">
+                            <label class="font-bold text-teal-800 block mb-1">Impact social & culturel</label>
+                            <p class="text-sm text-teal-600">Cohésion sociale ? Liens communautaires ?</p>
+                        </div>
+                        <div class="md:col-span-2">
+                            <textarea id="q-culture" class="w-full h-24 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-400 focus:border-transparent" placeholder="Ex: Cette fête permet de réunir les familles... Elle renforce l'identité..."></textarea>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="mt-8 text-center">
+                    <button onclick="saveAndSwitch()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg transform transition hover:scale-105">
+                        <i class="fas fa-save mr-2"></i> Sauvegarder mes réponses
+                    </button>
+                    <p class="text-sm text-gray-500 mt-2">Vos réponses seront transférées à l'onglet suivant.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================= ONGLET 2 : ENREGISTREMENT ======================= -->
+        <section id="tab-record" class="hidden animate-fade-in">
+            
+            <div class="grid lg:grid-cols-2 gap-8">
+                
+                <!-- COLONNE GAUCHE : Récapitulatif -->
+                <div class="space-y-6">
+                    <div class="bg-white rounded-xl shadow-md p-6 border-t-4 border-indigo-500">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                            <i class="fas fa-file-alt mr-2 text-indigo-500"></i> Ma fiche récapitulative
+                        </h3>
+                        
+                        <!-- Formulaire d'identité -->
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700">Nom</label>
+                                <input type="text" id="student-name" class="w-full p-2 border rounded bg-gray-50" placeholder="Votre nom">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700">Prénom</label>
+                                <input type="text" id="student-firstname" class="w-full p-2 border rounded bg-gray-50" placeholder="Votre prénom">
+                            </div>
+                        </div>
+
+                        <!-- Zone à capturer -->
+                        <div id="recap-card" class="bg-gray-50 p-4 rounded-lg border border-gray-200 text-sm space-y-3">
+                            <!-- En-tête invisible sauf capture -->
+                            <div class="hidden print-header mb-2 border-b pb-2">
+                                <h4 class="font-bold text-lg text-indigo-700">Voyage en Colombie</h4>
+                                <p class="text-gray-600">Élève: <span id="print-name-display"></span></p>
+                            </div>
+
+                            <div>
+                                <h4 class="font-bold text-blue-700">1. Nom de la fête</h4>
+                                <p id="view-nom" class="text-gray-700 italic bg-white p-2 rounded border border-gray-100 min-h-[40px]"></p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-green-700">2. Lieu</h4>
+                                <p id="view-lieu" class="text-gray-700 italic bg-white p-2 rounded border border-gray-100 min-h-[40px]"></p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-purple-700">3. Date</h4>
+                                <p id="view-date" class="text-gray-700 italic bg-white p-2 rounded border border-gray-100 min-h-[40px]"></p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-orange-700">4. Activités</h4>
+                                <p id="view-activites" class="text-gray-700 italic bg-white p-2 rounded border border-gray-100 min-h-[40px]"></p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-red-700">5. Nourriture</h4>
+                                <p id="view-nourriture" class="text-gray-700 italic bg-white p-2 rounded border border-gray-100 min-h-[40px]"></p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-teal-700">6. Culture</h4>
+                                <p id="view-culture" class="text-gray-700 italic bg-white p-2 rounded border border-gray-100 min-h-[40px]"></p>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 text-center">
+                            <button onclick="downloadScreenshot()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-lg shadow transition flex items-center justify-center mx-auto w-full md:w-auto">
+                                <i class="fas fa-camera mr-2"></i> Télécharger mes réponses en image
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COLONNE DROITE : Vidéo -->
+                <div class="space-y-6">
+                    <div class="bg-gray-900 rounded-xl shadow-md overflow-hidden border-4 border-gray-800 relative">
+                        <!-- Indicateur d'enregistrement -->
+                        <div id="recording-badge" class="hidden absolute top-4 right-4 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-bold animate-pulse z-10">
+                            <i class="fas fa-circle mr-1 text-xs"></i> REC
+                        </div>
+                        
+                        <!-- Élément Vidéo -->
+                        <video id="videoElement" autoplay muted playsinline class="w-full h-64 md:h-96 object-cover bg-black"></video>
+                        
+                        <!-- Overlay de départ (Placeholder) -->
+                        <div id="camera-placeholder" class="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 text-white z-0">
+                            <i class="fas fa-video-slash text-5xl mb-3 text-gray-500"></i>
+                            <p>Caméra éteinte ou en attente</p>
+                        </div>
+                    </div>
+
+                    <!-- Contrôles Vidéo -->
+                    <div class="bg-white rounded-xl shadow-md p-6 text-center space-y-4">
+                        <h3 class="text-lg font-bold text-gray-800">Studio d'enregistrement</h3>
+                        
+                        <div class="flex flex-wrap justify-center gap-3" id="controls">
+                            <button onclick="startCamera()" id="btn-camera" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg">
+                                <i class="fas fa-power-off mr-2"></i> Activer Caméra
+                            </button>
+                            
+                            <button onclick="startRecording()" id="btn-start" class="hidden bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg">
+                                <i class="fas fa-record-vinyl mr-2"></i> Enregistrer
+                            </button>
+                            
+                            <button onclick="pauseRecording()" id="btn-pause" class="hidden bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg">
+                                <i class="fas fa-pause mr-2"></i> Pause
+                            </button>
+
+                            <button onclick="resumeRecording()" id="btn-resume" class="hidden bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg">
+                                <i class="fas fa-play mr-2"></i> Reprendre
+                            </button>
+                            
+                            <button onclick="stopRecording()" id="btn-stop" class="hidden bg-gray-700 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded-lg">
+                                <i class="fas fa-stop mr-2"></i> Finir
+                            </button>
+                        </div>
+
+                        <!-- Zone de téléchargement Vidéo -->
+                        <div id="download-area" class="hidden mt-4 p-4 bg-green-50 border border-green-200 rounded-lg animate-fade-in">
+                            <p class="text-green-800 font-semibold mb-3">🎉 Vidéo prête !</p>
+                            <div class="flex flex-col sm:flex-row justify-center gap-3">
+                                <a id="download-link" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg cursor-pointer flex items-center justify-center">
+                                    <i class="fas fa-download mr-2"></i> Télécharger (.mp4)
+                                </a>
+                                <button onclick="resetVideo()" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded-lg">
+                                    <i class="fas fa-redo mr-2"></i> Refaire
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-6 text-gray-500 text-sm">
+        <p>Projet éducatif FLE - 8e année</p>
+    </footer>
+
+    <!-- LOGIQUE JAVASCRIPT -->
+    <script>
+        // --- 1. GESTION DES ONGLETS & DONNÉES ---
+        
+        function switchTab(tabName) {
+            // Masquer tout
+            document.getElementById('tab-prep').classList.add('hidden');
+            document.getElementById('tab-record').classList.add('hidden');
+            document.getElementById('btn-prep').classList.remove('active', 'bg-sky-100', 'border-sky-700', 'text-sky-700');
+            document.getElementById('btn-record').classList.remove('active', 'bg-sky-100', 'border-sky-700', 'text-sky-700');
+
+            // Afficher le bon onglet
+            document.getElementById('tab-' + tabName).classList.remove('hidden');
+            document.getElementById('btn-' + tabName).classList.add('active');
+
+            // Si on va vers l'enregistrement, on met à jour les données
+            if (tabName === 'record') {
+                updateRecap();
+            }
+        }
+
+        function saveAndSwitch() {
+            // Feedback visuel (simple alert ou changement bouton)
+            const btn = document.querySelector('#tab-prep button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check mr-2"></i> Sauvegardé !';
+            btn.classList.replace('bg-blue-600', 'bg-green-600');
+            
+            setTimeout(() => {
+                switchTab('record');
+                // Reset bouton après transition
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.classList.replace('bg-green-600', 'bg-blue-600');
+                }, 1000);
+            }, 500);
+        }
+
+        function updateRecap() {
+            // Mapping des IDs source -> destination
+            const fields = ['nom', 'lieu', 'date', 'activites', 'nourriture', 'culture'];
+            
+            fields.forEach(field => {
+                const content = document.getElementById('q-' + field).value;
+                const view = document.getElementById('view-' + field);
+                
+                if (content.trim() === "") {
+                    view.textContent = "(Pas de réponse)";
+                    view.classList.add('text-gray-400');
+                    view.classList.remove('text-gray-700');
+                } else {
+                    view.textContent = content;
+                    view.classList.add('text-gray-700');
+                    view.classList.remove('text-gray-400');
+                }
+            });
+        }
+
+        // --- 2. CAPTURE D'ÉCRAN (IMAGE) ---
+
+        function downloadScreenshot() {
+            const element = document.getElementById('recap-card');
+            const name = document.getElementById('student-name').value || "Eleve";
+            const firstname = document.getElementById('student-firstname').value || "";
+            
+            // Préparer l'affichage du nom pour l'impression
+            const header = element.querySelector('.print-header');
+            const nameDisplay = document.getElementById('print-name-display');
+            nameDisplay.textContent = `${firstname} ${name}`;
+            
+            // Afficher temporairement l'en-tête
+            header.classList.remove('hidden');
+            
+            html2canvas(element, { scale: 2 }).then(canvas => {
+                // Créer le lien de téléchargement
+                const link = document.createElement('a');
+                link.download = `Prepa_Oral_Colombie_${name}_${firstname}.png`;
+                link.href = canvas.toDataURL("image/png");
+                link.click();
+                
+                // Masquer l'en-tête à nouveau
+                header.classList.add('hidden');
+            }).catch(err => {
+                console.error("Erreur capture", err);
+                alert("Impossible de générer l'image.");
+                header.classList.add('hidden');
+            });
+        }
+
+        // --- 3. ENREGISTREMENT VIDÉO ---
+
+        let mediaRecorder;
+        let recordedChunks = [];
+        let stream;
+
+        const videoElement = document.getElementById('videoElement');
+        const badge = document.getElementById('recording-badge');
+        const placeholder = document.getElementById('camera-placeholder');
+
+        // Boutons
+        const btnCamera = document.getElementById('btn-camera');
+        const btnStart = document.getElementById('btn-start');
+        const btnPause = document.getElementById('btn-pause');
+        const btnResume = document.getElementById('btn-resume');
+        const btnStop = document.getElementById('btn-stop');
+        const downloadArea = document.getElementById('download-area');
+
+        async function startCamera() {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                videoElement.srcObject = stream;
+                placeholder.classList.add('hidden');
+                
+                // UI updates
+                btnCamera.classList.add('hidden');
+                btnStart.classList.remove('hidden');
+            } catch (err) {
+                console.error("Erreur caméra:", err);
+                alert("Impossible d'accéder à la caméra. Vérifiez les permissions.");
+            }
+        }
+
+        function startRecording() {
+            recordedChunks = [];
+            // Préférence pour mp4 (safari) ou webm
+            const options = { mimeType: 'video/webm;codecs=vp9,opus' };
+            
+            if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+                 // Fallback simple
+                 mediaRecorder = new MediaRecorder(stream);
+            } else {
+                 mediaRecorder = new MediaRecorder(stream, options);
+            }
+
+            mediaRecorder.ondataavailable = (event) => {
+                if (event.data.size > 0) {
+                    recordedChunks.push(event.data);
+                }
+            };
+
+            mediaRecorder.onstop = saveVideo;
+
+            mediaRecorder.start();
+
+            // UI Updates
+            badge.classList.remove('hidden');
+            btnStart.classList.add('hidden');
+            btnPause.classList.remove('hidden');
+            btnStop.classList.remove('hidden');
+        }
+
+        function pauseRecording() {
+            mediaRecorder.pause();
+            badge.classList.replace('animate-pulse', 'opacity-50');
+            badge.innerHTML = '<i class="fas fa-pause mr-1 text-xs"></i> PAUSE';
+            
+            btnPause.classList.add('hidden');
+            btnResume.classList.remove('hidden');
+        }
+
+        function resumeRecording() {
+            mediaRecorder.resume();
+            badge.classList.replace('opacity-50', 'animate-pulse');
+            badge.innerHTML = '<i class="fas fa-circle mr-1 text-xs"></i> REC';
+
+            btnResume.classList.add('hidden');
+            btnPause.classList.remove('hidden');
+        }
+
+        function stopRecording() {
+            mediaRecorder.stop();
+            // Stop stream tracks to turn off camera light (optionnel, ici on garde la caméra active pour "refaire")
+            // stream.getTracks().forEach(track => track.stop());
+
+            badge.classList.add('hidden');
+            
+            btnPause.classList.add('hidden');
+            btnResume.classList.add('hidden');
+            btnStop.classList.add('hidden');
+        }
+
+        function saveVideo() {
+            const blob = new Blob(recordedChunks, { type: 'video/mp4' }); // Container MP4 générique
+            const url = URL.createObjectURL(blob);
+            
+            const downloadLink = document.getElementById('download-link');
+            const name = document.getElementById('student-name').value || "Eleve";
+            
+            downloadLink.href = url;
+            downloadLink.download = `Video_Oral_Colombie_${name}.mp4`;
+            
+            downloadArea.classList.remove('hidden');
+        }
+
+        function resetVideo() {
+            downloadArea.classList.add('hidden');
+            btnStart.classList.remove('hidden');
+            
+            // Reset badge state
+            badge.innerHTML = '<i class="fas fa-circle mr-1 text-xs"></i> REC';
+            badge.classList.replace('opacity-50', 'animate-pulse');
+        }
+
+    </script>
+</body>
+</html>
