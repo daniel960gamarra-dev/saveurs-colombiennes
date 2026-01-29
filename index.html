@@ -252,6 +252,11 @@
                         <div id="recording-badge" class="hidden absolute top-4 right-4 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-bold animate-pulse z-10">
                             <i class="fas fa-circle mr-1 text-xs"></i> REC
                         </div>
+
+                        <!-- Chronomètre -->
+                        <div id="timer" class="absolute top-4 left-4 bg-gray-800 bg-opacity-70 text-white px-3 py-1 rounded-full text-sm font-bold font-mono z-10 border border-gray-600">
+                            00:00
+                        </div>
                         
                         <!-- Élément Vidéo -->
                         <video id="videoElement" autoplay muted playsinline class="w-full h-64 md:h-96 object-cover bg-black"></video>
@@ -408,9 +413,14 @@
         let mediaRecorder;
         let recordedChunks = [];
         let stream;
+        
+        // Variables pour le chronomètre
+        let timerInterval;
+        let totalSeconds = 0;
 
         const videoElement = document.getElementById('videoElement');
         const badge = document.getElementById('recording-badge');
+        const timerDisplay = document.getElementById('timer'); // Référence au chronomètre
         const placeholder = document.getElementById('camera-placeholder');
 
         // Boutons
@@ -436,6 +446,30 @@
             }
         }
 
+        // Fonction utilitaire pour le chronomètre
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function startTimer() {
+            stopTimer(); // Sécurité
+            timerInterval = setInterval(() => {
+                totalSeconds++;
+                timerDisplay.textContent = formatTime(totalSeconds);
+                
+                // Petit indicateur visuel si on dépasse 3 minutes (optionnel, change la couleur en orange)
+                if (totalSeconds > 180) {
+                    timerDisplay.classList.replace('text-white', 'text-orange-400');
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+        }
+
         function startRecording() {
             recordedChunks = [];
             // Préférence pour mp4 (safari) ou webm
@@ -457,6 +491,9 @@
             mediaRecorder.onstop = saveVideo;
 
             mediaRecorder.start();
+            
+            // Lancer le chronomètre
+            startTimer();
 
             // UI Updates
             badge.classList.remove('hidden');
@@ -467,6 +504,8 @@
 
         function pauseRecording() {
             mediaRecorder.pause();
+            stopTimer(); // Pause du chrono
+
             badge.classList.replace('animate-pulse', 'opacity-50');
             badge.innerHTML = '<i class="fas fa-pause mr-1 text-xs"></i> PAUSE';
             
@@ -476,6 +515,8 @@
 
         function resumeRecording() {
             mediaRecorder.resume();
+            startTimer(); // Reprise du chrono
+
             badge.classList.replace('opacity-50', 'animate-pulse');
             badge.innerHTML = '<i class="fas fa-circle mr-1 text-xs"></i> REC';
 
@@ -485,6 +526,8 @@
 
         function stopRecording() {
             mediaRecorder.stop();
+            stopTimer(); // Arrêt du chrono
+
             // Stop stream tracks to turn off camera light (optionnel, ici on garde la caméra active pour "refaire")
             // stream.getTracks().forEach(track => track.stop());
 
@@ -515,6 +558,11 @@
             // Reset badge state
             badge.innerHTML = '<i class="fas fa-circle mr-1 text-xs"></i> REC';
             badge.classList.replace('opacity-50', 'animate-pulse');
+
+            // Reset Chronomètre
+            totalSeconds = 0;
+            timerDisplay.textContent = "00:00";
+            timerDisplay.classList.replace('text-orange-400', 'text-white');
         }
 
     </script>
